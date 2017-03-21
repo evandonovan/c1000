@@ -10,3 +10,11 @@ define('C1000_ERROR_NO_COURSES', 3);
 define('C1000_ERROR_URL_ENDPOINT', 'local/c1000/error_endpoint.php');
 define('C1000_ERROR_ANONYMOUS', 'local/c1000/error_anonymous.php');
 define('C1000_ERROR_NO_COURSES', 'local/c1000/error_no_courses.php');
+
+// courses to check for enrollment
+define('C1000_COURSE_FF', '74');
+define('C1000_COURSE_WL', '79');
+
+// types of replies
+define('C1000_REPLY_SUCCESS', TRUE);
+define('C1000_REPLY_FAILURE', FALSE);

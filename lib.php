@@ -38,7 +38,7 @@ function c1000_build_json() {
   return $json_data;
 }
 
-function c1000_post_json() {
+function c1000_post_json($json_data, $url) {
   // Open connection
   $ch = curl_init();
   // Set the CURL params: URL, JSON settings

@@ -98,6 +98,9 @@ function c1000_parse_response() {
   else {
     $response = array('status' => C1000_ERROR_ENDPOINT, 'error_details' => 'unknown status', 'raw_data' => $parsed_json);
   }
+  
+  // put the JSON response data in the session, for debugging on error page
+  $_SESSION['json_response'] = $response;
 
   return $response;    
 }
@@ -105,20 +108,22 @@ function c1000_parse_response() {
 function c1000_redirect($code, $url = '') {
   // Uses Moodle's redirect() function to redirect appropriately.
   switch($code) {
+    // If access is granted, redirect to c1000
     case C1000_ACCESS_GRANTED:
       if(!empty($url)) {
         redirect($url);
       }
       break;
+    // Otherwise, redirect to an error page
     case C1000_ERROR_ANONYMOUS:
-      redirect(C1000_URL_ERROR_ANONYMOUS);
+      redirect(C1000_ERROR_URL_ANONYMOUS);
       break;
     case C1000_ERROR_NO_COURSES:
-      redirect(C1000_URL_ERROR_NO_COURSES);
+      redirect(C1000_ERROR_URL_NO_COURSES);
       break;
     case C1000_ERROR_ENDPOINT:
     default:
-      redirect(C1000_URL_ERROR_ENDPOINT);
+      redirect(C1000_ERROR_URL_ENDPOINT);
    }
 }
 

@@ -1,5 +1,8 @@
 <?php
 
+// Which endpoint to use: check settings.php.dist for options
+define('C1000_ENDPOINT_CURRENT', C1000_ENDPOINT_DEV_SUCCESS);
+
 // Conditions of success / failure
 define('C1000_ACCESS_GRANTED', 1);
 define('C1000_ERROR_ENDPOINT', -1);

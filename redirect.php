@@ -8,7 +8,7 @@ $PAGE->set_context(get_system_context());
 $PAGE->set_pagelayout('admin');
 $PAGE->set_title("Redirecting...");
 $PAGE->set_heading("Redirecting...");
-$PAGE->set_url($CFG->wwwroot.'/local/curtis100/redirect.php');
+$PAGE->set_url($CFG->wwwroot.'/local/c1000/redirect.php');
 
 echo $OUTPUT->header();
 
@@ -25,7 +25,7 @@ if(c1000_is_anonymous()) {
 // If so, build the JSON, post it, and parse response.
 if(c1000_check_course_enrollment(C1000_COURSE_FF) || c1000_check_course_enrollment(C1000_COURSE_WL)) {
   $json_data = c1000_build_json();
-  $result = c1000_post_json($json_data, C1000_ENDPOINT_DEV);
+  $result = c1000_post_json($json_data, C1000_ENDPOINT_CURRENT);
   // TODO: See if parsing the response works properly with php://input
   // May need to work this out with them more.
   $response = c1000_parse_response();

@@ -1,3 +1,3 @@
 <?php
 
-$string['pluginname'] = 'Curtis1000 Integration';
+$string['pluginname'] = 'C1000 SSO Integration';

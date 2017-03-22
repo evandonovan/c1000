@@ -161,5 +161,6 @@ function c1000_build_reply_json($type = C1000_STATUS_PASS) {
   else {
     $fields[0]['URL']['URL'] = '';
   }
+  $json_data = json_encode($fields, JSON_PRETTY_PRINT);
   return $json_data;
 }

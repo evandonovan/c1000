@@ -12,6 +12,7 @@ $PAGE->set_url($CFG->wwwroot.'/local/c1000/error_anonymous.php');
 
 echo $OUTPUT->header();
 
+echo "<h2>Login Required</h2>";
 echo "<p>Please log in to access this content.</p>";
 echo '<p><a href="https://chalmers-training.org">Go back to the homepage.</a></p>';
 

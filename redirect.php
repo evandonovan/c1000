@@ -17,8 +17,10 @@ global $USER;
 $code = NULL;
 
 // Check if user is anonymous.
+// If so, end early.
 if(c1000_is_anonymous()) {
   $code = C1000_ERROR_ANONYMOUS;
+  c1000_redirect($code);
 }
 
 // Check if user is enrolled in either of the courses.
@@ -30,20 +32,20 @@ if(c1000_check_course_enrollment(C1000_COURSE_FF) || c1000_check_course_enrollme
   // May need to work this out with them more.
   $response = c1000_parse_response();
   // Redirect based on response
-  // Success
+  // Success has a URL returned
   if(!empty($response['url'])) {
     c1000_redirect($response['status'], $response['url']);
   }
+  // Failure
   else {
     c1000_redirect($response['status']);
   }
 }
+// Redirect to no courses page
 else {
   $code = C1000_ERROR_NO_COURSES;
+  c1000_redirect($code);
 }
-
-// Redirect (for error conditions)
-c1000_redirect($code);
 
 echo $OUTPUT->footer();
 

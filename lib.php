@@ -53,8 +53,10 @@ function c1000_post_json($json_data, $url) {
   );
   $result = curl_exec($ch);
 
+  // var_dump($result);
   // var_dump(curl_errno($ch));
   // var_dump(curl_getinfo($ch));
+  // die();
 
   // Close connection
   curl_close($ch);
@@ -62,10 +64,8 @@ function c1000_post_json($json_data, $url) {
   return $result;
 }
 
-function c1000_parse_response() {
+function c1000_parse_response($payload) {
   $response = array('status' => C1000_ERROR_ENDPOINT, 'url' => '', 'error_details' => NULL, 'parsed_json' => NULL, 'payload' => NULL);
-  // Receive JSON payload.
-  $payload = file_get_contents("php://input", TRUE);
 
   // Check its length.
   if(strlen($payload) == 0) {
@@ -152,9 +152,9 @@ function c1000_check_course_enrollment($courseid) {
 function c1000_build_reply_json($type = C1000_STATUS_PASS) {
   $json_data = '';
   
-  // Set JSON POST fields
+  // Set JSON reply fields (to echo)
   $fields = array(array(
-    'SharedSecret' => array('Secret' => C1000_SECRET, 'Company' => C1000_COMPANY, 'status' => $type)));
+    'SharedSecret' => array('Secret' => C1000_SECRET, 'Company' => C1000_COMPANY, 'Status' => $type)));
   if($type == C1000_STATUS_PASS) {
     $fields[0]['URL']['URL'] = 'http://itwillbehere.com';
   }

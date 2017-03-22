@@ -28,9 +28,7 @@ if(c1000_is_anonymous()) {
 if(c1000_check_course_enrollment(C1000_COURSE_FF) || c1000_check_course_enrollment(C1000_COURSE_WL)) {
   $json_data = c1000_build_json();
   $result = c1000_post_json($json_data, C1000_ENDPOINT_CURRENT);
-  // TODO: See if parsing the response works properly with php://input
-  // May need to work this out with them more.
-  $response = c1000_parse_response();
+  $response = c1000_parse_response($result);
   // Redirect based on response
   // Success has a URL returned
   if(!empty($response['url'])) {

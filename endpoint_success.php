@@ -1,4 +1,6 @@
 <?php
 
 $json_data = c1000_build_reply_json(C1000_STATUS_PASS);
-$result = c1000_post_json($json_data, C1000_REDIRECT_ENDPOINT);
+// Set proper header - see http://stackoverflow.com/questions/4064444
+header('Content-type: application/json;charset=utf-8');
+echo $json_data; // already encoded by function

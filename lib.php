@@ -52,11 +52,17 @@ function c1000_post_json($json_data, $url) {
     'Content-Length: ' . strlen($json_data))
   );
   $result = curl_exec($ch);
-
-  // var_dump($result);
-  // var_dump(curl_errno($ch));
-  // var_dump(curl_getinfo($ch));
-  // die();
+  
+  /* Various debugging as needed */
+  //var_dump($url);
+  //var_dump($json_data);
+  //var_dump(json_decode($json_data));
+  //var_dump($result);
+  //var_dump(json_decode($result));
+  //var_dump(curl_errno($ch));
+  //var_dump(curl_getinfo($ch));
+  /* Dying here is a breakpoint to see any debugging info */
+  //die();
 
   // Close connection
   curl_close($ch);
@@ -65,44 +71,53 @@ function c1000_post_json($json_data, $url) {
 }
 
 function c1000_parse_response($payload) {
+  $response = NULL;
+  // Call special parsing logic
+  $response = _c1000_parse_response($payload);
+  // Put JSON response in SESSION, for debugging on error page
+  $_SESSION['json_response'] = $response;
+  return $response;
+}
+
+function _c1000_parse_response($payload) {
   $response = array('status' => C1000_ERROR_ENDPOINT, 'url' => '', 'error_details' => NULL, 'parsed_json' => NULL, 'payload' => NULL);
 
   // Check its length.
   if(strlen($payload) == 0) {
    $response = array('status' => C1000_ERROR_ENDPOINT, 'error_details' => 'no data', 'parsed_json' => NULL, 'payload' => $payload);
+   return $response;
   }
   
   // Parse it (as an array, 2nd parameter)
   $parsed_json = json_decode($payload, TRUE);
   if(!is_array($parsed_json) || count($parsed_json) < 1) {
     $response = array('status' => C1000_ERROR_ENDPOINT, 'error details' => 'error parsing json', 'parsed_json' => NULL, 'payload' => $payload);
+    return $response;
   }
   
   // Check the secret
-  // TODO: confirm these are correct in the structure
-  $secret = $parsed_json[0]['SharedSecret']['Secret'];
-  $company = $parsed_json[0]['SharedSecret']['Company'];
+  $secret = $parsed_json[0]['SharedSecret']['SECRET'];
+  $company = $parsed_json[0]['SharedSecret']['COMPANY'];
 
   if($secret != C1000_SECRET || $company != C1000_COMPANY) {
     $response = array('status' => C1000_ERROR_ENDPOINT, 'error_details' => 'secret did not match', 'parsed_json' => print_r($parsed_json, TRUE), 'payload' => $payload);
+    return $response;
   }
 
-  $status = $parsed_json[0]['SharedSecret']['Status'];
+  $status = $parsed_json[0]['SharedSecret']['STATUS'];
   if($status == 'Fail') {
     $response = array('status' => C1000_ERROR_ENDPOINT, 'error_details' => 'status was failure', 'parsed_json' => print_r($parsed_json, TRUE), 'payload' => $payload);
+    return $response;
   }
   else if($status == 'Pass') {
     $url = $parsed_json[0]['URL']['URL'];
     $response = array('url' => $url, 'status' => C1000_ACCESS_GRANTED, 'error_details' => NULL, 'parsed_json' => print_r($parsed_json, TRUE), 'payload' => $payload);
+    return $response;
    }
   else {
     $response = array('status' => C1000_ERROR_ENDPOINT, 'error_details' => 'unknown status', 'parsed_json' => print_r($parsed_json, TRUE), 'payload' => $payload);
+    return $response;
   }
-  
-  // put the JSON response data in the session, for debugging on error page
-  $_SESSION['json_response'] = $response;
-
-  return $response;    
 }
 
 function c1000_redirect($code, $url = '') {
@@ -156,7 +171,7 @@ function c1000_build_reply_json($type = C1000_STATUS_PASS) {
   $fields = array(array(
     'SharedSecret' => array('Secret' => C1000_SECRET, 'Company' => C1000_COMPANY, 'Status' => $type)));
   if($type == C1000_STATUS_PASS) {
-    $fields[0]['URL']['URL'] = 'http://itwillbehere.com';
+    $fields[0]['URL']['URL'] = 'http://www.example.com';
   }
   else {
     $fields[0]['URL']['URL'] = '';

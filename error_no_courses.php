@@ -12,8 +12,8 @@ $PAGE->set_url($CFG->wwwroot.'/local/curtis100/error_no_courses.php');
 
 echo $OUTPUT->header();
 
-echo "<h2>Course Enrollment Needed</h2>";
-echo "<p>You are not enrolled in a course that gives you access to this content.</p>";
+echo "<h2>Authorization Required</h2>";
+echo "<p>You are not authorized to access to content.</p>";
 echo '<p><a href="https://chalmers-training.org">Go back to the homepage.</a></p>';
 
 echo $OUTPUT->footer();

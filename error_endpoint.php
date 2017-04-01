@@ -12,9 +12,10 @@ $PAGE->set_url($CFG->wwwroot.'/local/c1000/error_endpoint.php');
 
 echo $OUTPUT->header();
 
-echo "<p>An unknown error has occurred.</p>";
+echo "<h2>Technical Error</h2>";
+echo "<p>A technical problem has occurred. Please try again later.</p>";
 echo '<p><a href="https://chalmers-training.org">Go back to the homepage.</a></p>';
-// TODO: add temporary debugging code to show error details & raw data
+// Temporary debugging code to show error details & raw data
 echo "<!--";
 if(isset($_SESSION['json_response'])) {
   echo print_r($_SESSION['json_response'], TRUE);

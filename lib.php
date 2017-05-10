@@ -12,26 +12,35 @@ function c1000_build_json() {
 
   // Moodle doesn't have separate fields for city and state
   $city_state = explode(',', $USER->city);
+  // added robustness if there is no comma-delimiter between city and state
+  if(count($city_state) <= 1) {
+    $city_state[0] = $USER->city;
+    $city_state[1] = 'Un'; // undefined
+  }
 
   // c1000 likes to see US as USA
   if($USER->country == 'US') {
     $country = 'USA';
   }
+  
+  // Get user's course ids
+  $courseids = c1000_get_users_courses($USER->id);
 
   // Set JSON POST fields
   $fields = array(array(
     'SharedSecret' => array('Secret' => C1000_SECRET, 'Company' => C1000_COMPANY),
-  'User' => array(
-    'FirstName' => $USER->firstname,
-    'LastName' => $USER->lastname,
-    'Email' => $USER->email,
-    'Address1' => $USER->address,   // typically not set
-    'Address2' => '',               // no equivalent field in Moodle
-    'City' => $city_state[0],
-    'State' => $city_state[1],
-    'PostalCode' => '',             // no equivalent field in Moodle
-    'Country' => $country,
-    'Phone' => $USER->phone1,       // typically not set
+    'User' => array(
+      'FirstName' => $USER->firstname,
+      'LastName' => $USER->lastname,
+      'Email' => $USER->email,
+      'Address1' => $USER->address,   // typically not set
+      'Address2' => '',               // no equivalent field in Moodle
+      'City' => $city_state[0],
+      'State' => $city_state[1],
+      'PostalCode' => '',             // no equivalent field in Moodle
+      'Country' => $country,
+      'Phone' => $USER->phone1,       // typically not set
+      'Courses' => $courseids         // id's of the courses in which the user is enrolled
   ),
 ));
   $json_data = json_encode($fields, JSON_PRETTY_PRINT);
@@ -153,7 +162,19 @@ function c1000_is_anonymous() {
   }
 }
 
-// Check user's courses
+// Get id's of all courses in which a user is enrolled
+function c1000_get_users_courses($userid) {
+  $courseids = array();
+  $courses = enrol_get_users_courses($userid);
+  if($courses != NULL && is_array($courses) && count($courses) > 0) {
+    foreach($courses as $course) {
+      $courseids[] = $course['id'];
+    }
+  }
+  return $courseids;
+}
+
+// Check user's enrollment in a specific course (by id)
 function c1000_check_course_enrollment($courseid) {
   global $USER;
   

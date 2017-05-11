@@ -165,11 +165,11 @@ function c1000_is_anonymous() {
 // Get id's of all courses in which a user is enrolled
 function c1000_get_users_courses($userid) {
   $courseids = array();
+  $courses = array();
   $courses = enrol_get_users_courses($userid);
   if($courses != NULL && is_array($courses) && count($courses) > 0) {
-    foreach($courses as $course) {
-      $courseids[] = $course['id'];
-    }
+    // IMPORTANT - courses are objects in the array, keyed by the course id
+    $courseids = array_keys($courses);
   }
   return $courseids;
 }
